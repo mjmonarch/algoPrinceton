@@ -8,5 +8,12 @@
     <artifactId>algorytm</artifactId>
     <version>1.1-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>edu.princeton.cs</groupId>
+            <artifactId>algs4</artifactId>
+            <version>1.0.0.0</version>
+        </dependency>
+    </dependencies>
 
 </project>
