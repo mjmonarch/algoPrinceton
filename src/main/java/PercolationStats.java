@@ -33,14 +33,14 @@ public class PercolationStats {
         res = new double[trials];
 
         if (trials == 1) one_trial = true;
-        for (int i=0; i<trials; i++) {
+        for (int i = 0; i < trials; i++) {
             per = new Percolation(n);
             while (!per.percolates()) {
                 row = StdRandom.uniform(n) + 1;
                 col = StdRandom.uniform(n) + 1;
                 per.open(row, col);
             }
-            res[i] = (double) per.numberOfOpenSites()/(n*n);
+            res[i] = (double) per.numberOfOpenSites() /(n * n);
         }
     }
 
@@ -57,26 +57,26 @@ public class PercolationStats {
 
     //low  endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - 1.96*Math.sqrt(stddev())/Math.sqrt(trials);
+        return mean() - 1.96 * Math.sqrt(stddev()) / Math.sqrt(trials);
     }
 
     //high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + 1.96*Math.sqrt(stddev())/Math.sqrt(trials);
+        return mean() + 1.96 * Math.sqrt(stddev()) / Math.sqrt(trials);
     }
 
     //test client
     public static void main(String[] args) {
         StdOut.println("starting test client");
         StdOut.println("1. test on grid 200x200 with 100 trials");
-        PercolationStats a = new PercolationStats(200,100);
+        PercolationStats a = new PercolationStats(200, 100);
         StdOut.println("mean =" + a.mean());
         StdOut.println("stddev =" + a.stddev());
-        StdOut.println("95% confidence interval = (" + a.confidenceLo()+ ", " + a.confidenceHi() + ")");
+        StdOut.println("95% confidence interval = (" + a.confidenceLo() + ", " + a.confidenceHi() + ")");
         StdOut.println("1. test on grid 2x2 with 10000 trials");
-        a = new PercolationStats(2,10000);
+        a = new PercolationStats(2, 10000);
         StdOut.println("mean =" + a.mean());
         StdOut.println("stddev =" + a.stddev());
-        StdOut.println("95% confidence interval = (" + a.confidenceLo()+ ", " + a.confidenceHi() + ")");
+        StdOut.println("95% confidence interval = (" + a.confidenceLo() + ", " + a.confidenceHi() + ")");
     }
 }
