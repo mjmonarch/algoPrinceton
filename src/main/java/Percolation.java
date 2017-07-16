@@ -15,11 +15,12 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     //private variables
-    private boolean [] grid_status;    //true - open, false - closed
-    private WeightedQuickUnionUF grid;
-    private int dim;                   // dimension
-    private int open_q;                // quantity of open sites
-    private int last;                  // address of last site
+    private boolean [] grid_status;     //true - open, false - closed
+    private WeightedQuickUnionUF grid1; // WeightedQuickUnionUF structure for identifying percolation
+    private WeightedQuickUnionUF grid2; // WeightedQuickUnionUF structure for identifying full cells
+    private int dim;                    // dimension
+    private int open_q;                 // quantity of open sites
+    private int last;                   // address of last site
 
     //transform (x,y) to 1D attribute
     private int xyto1D (int x, int y) {
@@ -41,7 +42,8 @@ public class Percolation {
         open_q = 0;
         last = n*n + 1;
         grid_status = new boolean[last+1];
-        grid = new WeightedQuickUnionUF(last+1);
+        grid1 = new WeightedQuickUnionUF(last+1);
+        grid2 = new WeightedQuickUnionUF(last);
     }
 
     //open site (row, col) if it is not open already
@@ -55,21 +57,31 @@ public class Percolation {
         open_q++;
 
         //trying to connect to upper neighbour, if it is open
-        if (row == 1)
-            grid.union(0, r);
-        else if (grid_status[r-dim])
-            grid.union(r,r-dim);
+        if (row == 1) {
+            grid1.union(0, r);
+            grid2.union(0, r);
+        }
+        else if (grid_status[r-dim]) {
+            grid1.union(r, r - dim);
+            grid2.union(r, r - dim);
+        }
         //trying to connect to bottom neighbour, if it is open
         if (row == dim)
-            grid.union(last, r);
-        else if (grid_status[r+dim])
-            grid.union(r,r+dim);
+            grid1.union(last, r);
+        else if (grid_status[r+dim]) {
+            grid1.union(r, r + dim);
+            grid2.union(r, r + dim);
+        }
         //trying to connect to left neighbour, if it exist and is open
-        if ((col != 1) && (grid_status[r-1]))
-            grid.union(r-1, r);
+        if ((col != 1) && (grid_status[r-1])) {
+            grid1.union(r - 1, r);
+            grid2.union(r - 1, r);
+        }
         //trying to connect to right neighbour, if it exist and is open
-        if ((col != dim) && (grid_status[r+1]))
-            grid.union(r, r+1);
+        if ((col != dim) && (grid_status[r+1])) {
+            grid1.union(r, r + 1);
+            grid2.union(r, r + 1);
+        }
     }
 
     //is site (row, col) open?
@@ -81,7 +93,7 @@ public class Percolation {
     //is site (row, col) full?
     public boolean isFull(int row, int col)  {
         validate_indexes(row,col);
-        return grid.connected(xyto1D(row,col),0);
+        return grid2.connected(xyto1D(row,col),0);
     }
 
     //number of open sites
@@ -91,7 +103,7 @@ public class Percolation {
 
     //does the system percolate?
     public boolean percolates() {
-        return grid.connected(0, last);
+        return grid1.connected(0, last);
     }
 
     //test client
